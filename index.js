@@ -1,103 +1,142 @@
 var path = require('path');
 var fs = require('fs');
+var recursive = require('recursive-readdir');
 var glob = require('glob');
 var Promise = require('promise');
 
 function TimestampBrunch(brunchCfg){
-	
-	var cfg = brunchCfg.plugins.timestampbrunch
 
-	var publicFolder = brunchCfg.paths.public;
+    var cfg = brunchCfg.plugins.timestampbrunch;
 
-	this.onCompile = function(generatedFiles){
+    var publicFolder = brunchCfg.paths.public;
 
-        if(cfg.environments.indexOf(brunchCfg.env[0])==1){
+    this.onCompile = function(generatedFiles){
 
-          this.cleanOld(publicFolder).then(function(){
+        if(brunchCfg.server.run){
+            console.log('TimestampBrunch can\'t run with brunch watch');
+            return;
+        }
 
-              for (var file in  generatedFiles){
+        if(cfg.environments.indexOf(brunchCfg.env[0])!=-1){
 
-                  this.renameFile( generatedFiles[file].path);
-              }
+            this.cleanOld(publicFolder).then(function(){
 
-          }.bind(this));
+                this.renameFile( generatedFiles).then(function(files, currentfile){
+
+                    this.replaceContent(files);
+
+                }.bind(this));
+
+            }.bind(this));
 
         }else{
             console.log('TimestampBrunch Error');
         }
 
-	}
+    };
 
-    this.renameFile = function(filePath){
+    this.renameFile = function(generatedFiles){
 
-        var dir   = path.dirname(filePath);
-        var ext   = path.extname(filePath);
-        var base  = path.basename(filePath, ext);
+        function looping(filePath){
 
-        var currentfile = dir+'/'+base+ext;
+            return new Promise(function(resolve, reject){
 
-        if(fs.existsSync(currentfile)){
+                var dir   = path.dirname(filePath);
+                var ext   = path.extname(filePath);
+                var base  = path.basename(filePath, ext);
 
-            var newName = base+'-'+new Date().getTime()+ext;
+                var currentfile = dir+'/'+base+ext;
 
-            fs.rename(currentfile, dir+'/'+newName, function(err){
+                if(fs.existsSync(currentfile)){
 
-                if(err) throw console.warn('Erreur ',err);
+                    var newName = base+'-'+new Date().getTime()+(cfg.suffix ? cfg.suffix : '')+ext;
 
-                this.replaceContent(filePath, newName);
+                    fs.rename(currentfile, dir+'/'+newName, function(err){
+
+                        if(err)  return reject(err);
+
+                        var o = {
+                            "newName" : newName,
+                            "oldName" : currentfile
+                        }
+
+                        return resolve(o);
+
+                    }.bind(this));
+
+                }else{
+                    if(err)   reject('File not found  ', currentfile);
+                    throw console.warn('File not found  ', currentfile);
+                }
+
 
             }.bind(this));
 
-        }else{
-
-            throw console.warn('File not found  ', currentfile);
         }
 
-    }
+        var promises = [];
 
-    this.replaceContent = function(filePath, newName){
-
-        var filepath = publicFolder+'/'+cfg.referenceFiles;
-
-        if(fs.existsSync(filepath)){
-
-            var ext   = path.extname(filePath);
-            var base  = path.basename(filePath, ext);
-
-            var content = fs.readFileSync(filepath, 'UTF-8');
-
-            var reg = new RegExp(base+ext);
-
-            content = content.replace(reg, newName);
-
-            fs.writeFileSync(filepath, content);
-
+        for (var file in  generatedFiles) {
+            promises.push(looping(generatedFiles[file].path));
         }
 
-    }
+        return Promise.all(promises);
+
+    };
+
+    this.replaceContent = function(filesInfos){
+
+        glob(publicFolder +'/' + cfg.referenceFiles, {}, function (er, files) {
+
+            for(var file in files){
+
+                if(fs.existsSync(files[file])){
+
+                    for(var fileInfo in filesInfos){
+
+                        var ext   = path.extname(filesInfos[fileInfo].oldName);
+                        var base  = path.basename(filesInfos[fileInfo].oldName, ext);
+
+                        var content = fs.readFileSync(files[file], 'UTF-8');
+
+                        var regExp = new RegExp(base+ext);
+
+                        if(regExp.test(content)){
+
+                            content = content.replace(regExp,filesInfos[fileInfo].newName);
+
+                            fs.writeFileSync(files[file], content);
+                        }
+                    }
+                }
+            }
+
+        });
+
+    };
 
     this.cleanOld = function(base, ext){
 
         return new Promise(function(resolve, reject){
 
-            var path = publicFolder+'/**/*[0-9].*';
-
-            // console.log(path)
-           return glob(path, {}, function (er, files) {
-
-                if(er){
-                   return  reject(false);
-                }
+            recursive(publicFolder, function (err, files) {
+                // Files is an array of filename
                 for(var file in files){
-                    fs.unlink(files[file]);
+
+                    if(/-\d+(\.[^\d]+)?\.[^\d]+$/.test(files[file])){
+
+                        fs.unlink(files[file]);
+
+                    }
                 }
 
                 return resolve(true);
+
             });
 
         });
 
-    }
+    };
 }
 
 TimestampBrunch.prototype.brunchPlugin = true;

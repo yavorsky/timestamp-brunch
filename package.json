@@ -6,8 +6,9 @@
     "type": "git",
     "url": "git+ssh://git@github.com/fabienL/timestamp-brunch.git"
   },
-  "dependencies" : {
+  "dependencies": {
     "glob": "~4.3.5",
-    "promise": "^7.0.4"
+    "promise": "^7.0.4",
+    "recursive-readdir": "^1.3.0"
   }
 }
