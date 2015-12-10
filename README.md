@@ -1,4 +1,4 @@
-# Brunch Hash
+# TimeStamp Hash
 
-Add hash to files compiled by brunch
+Add timestamp to avoid the cache. JS/CSS
 
