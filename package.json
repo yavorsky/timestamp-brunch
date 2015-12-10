@@ -1,6 +1,11 @@
 {
-  "name": "hash-brunch",
+  "name": "timestamp-brunch",
   "version": "0.0.1",
+  "description": "Add timestamp to avoid the cache. JS/CSS",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/fabienL/hash-brunch.git"
+  },
   "dependencies" : {
     "glob": "~4.3.5",
     "promise": "^7.0.4"

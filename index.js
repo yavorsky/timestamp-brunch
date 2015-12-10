@@ -3,9 +3,9 @@ var fs = require('fs');
 var glob = require('glob');
 var Promise = require('promise');
 
-function BrunchHash(brunchCfg){
+function TimestampBrunch(brunchCfg){
 	
-	var cfg = brunchCfg.plugins.brunchhash
+	var cfg = brunchCfg.plugins.timestampbrunch
 
 	var publicFolder = brunchCfg.paths.public;
 
@@ -23,7 +23,7 @@ function BrunchHash(brunchCfg){
           }.bind(this));
 
         }else{
-            console.log('Brunchhash Error');
+            console.log('TimestampBrunch Error');
         }
 
 	}
@@ -100,8 +100,8 @@ function BrunchHash(brunchCfg){
     }
 }
 
-BrunchHash.prototype.brunchPlugin = true;
-BrunchHash.prototype.type = 'javascript';
-BrunchHash.prototype.extension = 'js';
+TimestampBrunch.prototype.brunchPlugin = true;
+TimestampBrunch.prototype.type = 'javascript';
+TimestampBrunch.prototype.extension = 'js';
 
-module.exports = BrunchHash;
+module.exports = TimestampBrunch;
