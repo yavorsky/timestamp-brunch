@@ -55,12 +55,10 @@ function TimestampBrunch(brunchCfg){
 
                         if(err)  return reject(err);
 
-                        var o = {
+                        return resolve({
                             "newName" : newName,
                             "oldName" : currentfile
-                        }
-
-                        return resolve(o);
+                        });
 
                     }.bind(this));
 
@@ -86,12 +84,14 @@ function TimestampBrunch(brunchCfg){
 
     this.replaceContent = function(filesInfos){
 
+        //parse ref files ex :index.html
         glob(publicFolder +'/' + cfg.referenceFiles, {}, function (er, files) {
 
             for(var file in files){
 
                 if(fs.existsSync(files[file])){
 
+                    //parse timestamped files
                     for(var fileInfo in filesInfos){
 
                         var ext   = path.extname(filesInfos[fileInfo].oldName);
