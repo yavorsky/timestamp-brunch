@@ -21,7 +21,7 @@ function TimestampBrunch(brunchCfg){
 
             this.cleanOld(publicFolder).then(function(){
 
-                this.renameFile( generatedFiles).then(function(files, currentfile){
+                this.renameFile(generatedFiles).then(function(files){
 
                     this.replaceContent(files);
 
