@@ -85,11 +85,20 @@ function TimestampBrunch(brunchCfg){
     this.replaceContent = function(filesInfos){
 
         //parse ref files ex :index.html
+
+        console.log(publicFolder +'/' + cfg.referenceFiles)
+
+
         glob(publicFolder +'/' + cfg.referenceFiles, {}, function (er, files) {
+
+
 
             for(var file in files){
 
+
                 if(fs.existsSync(files[file])){
+
+                    console.log(filesInfos)
 
                     //parse timestamped files
                     for(var fileInfo in filesInfos){
@@ -97,16 +106,22 @@ function TimestampBrunch(brunchCfg){
                         var ext   = path.extname(filesInfos[fileInfo].oldName);
                         var base  = path.basename(filesInfos[fileInfo].oldName, ext);
 
-                        var content = fs.readFileSync(files[file], 'UTF-8');
+                        var content = fs.readFileSync(files[file], 'UTF-8')
 
                         var regExp = new RegExp(base+ext);
 
                         if(regExp.test(content)){
 
+                            console.log('READ ', files[file], filesInfos[fileInfo].newName )
+
                             content = content.replace(regExp,filesInfos[fileInfo].newName);
 
                             fs.writeFileSync(files[file], content);
                         }
+
+
+
+
                     }
                 }
             }
@@ -120,7 +135,7 @@ function TimestampBrunch(brunchCfg){
         return new Promise(function(resolve, reject){
 
             recursive(publicFolder, function (err, files) {
-                // Files is an array of filename
+
                 for(var file in files){
 
                     if(/-\d+(\.[^\d]+)?\.[^\d]+$/.test(files[file])){
