@@ -85,20 +85,11 @@ function TimestampBrunch(brunchCfg){
     this.replaceContent = function(filesInfos){
 
         //parse ref files ex :index.html
-
-        console.log(publicFolder +'/' + cfg.referenceFiles)
-
-
         glob(publicFolder +'/' + cfg.referenceFiles, {}, function (er, files) {
-
-
 
             for(var file in files){
 
-
                 if(fs.existsSync(files[file])){
-
-                    console.log(filesInfos)
 
                     //parse timestamped files
                     for(var fileInfo in filesInfos){
@@ -112,15 +103,10 @@ function TimestampBrunch(brunchCfg){
 
                         if(regExp.test(content)){
 
-                            console.log('READ ', files[file], filesInfos[fileInfo].newName )
-
                             content = content.replace(regExp,filesInfos[fileInfo].newName);
 
                             fs.writeFileSync(files[file], content);
                         }
-
-
-
 
                     }
                 }
