@@ -3,7 +3,7 @@
 Add timestamp to avoid the cache. JS/CSS
 
 ## Example 
-This script tags will be compile
+Config : 
 ```json
 "plugins": {
 	"timestampbrunch" : {
@@ -13,6 +13,7 @@ This script tags will be compile
 	}
 }
 ```
+This script tags will be compile
 ```html
 <script src="js/vendor.js"></script>
 <script src="js/app.js"></script>
