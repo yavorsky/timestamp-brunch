@@ -2,6 +2,8 @@
 
 Add timestamp to avoid the cache. JS/CSS
 
+npm i timestamp-brunch -save
+
 ## Example 
 Config : 
 ```json
