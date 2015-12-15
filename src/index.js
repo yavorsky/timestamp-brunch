@@ -6,19 +6,12 @@ var Promise = require('promise');
 
 function TimestampBrunch(brunchCfg){
 
-    var cfgDefault = {
-        env : ['production']
-    };
 
     var cfg =  brunchCfg.plugins.timestampbrunch;
-
-    console.log(cfg);
 
     var publicFolder = brunchCfg.paths.public;
 
     this.onCompile = function(generatedFiles){
-
-         //   console.log('PASS ', brunchCfg)
 
         if(brunchCfg.server.run){
             console.log('TimestampBrunch can\'t run with brunch watch');
