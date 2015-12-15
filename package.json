@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/fabienL/timestamp-brunch.git"
   },
-  "keywords" :["brunch", "hash", "asset"],
+  "keywords" :["brunch","brunch-timestamp"],
   "main" : "src/index.js",
   "dependencies": {
     "glob": "~4.3.5",
