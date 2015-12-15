@@ -49,7 +49,7 @@ function TimestampBrunch(brunchCfg){
 
                 if(fs.existsSync(currentfile)){
 
-                    var newName = base+'-'+new Date().getTime()+(cfg.suffix ? cfg.suffix : '')+ext;
+                    var newName = base+'-'+new Date().getTime()+(cfg.suffix ? '.'+cfg.suffix : '')+ext;
 
                     fs.rename(currentfile, dir+'/'+newName, function(err){
 

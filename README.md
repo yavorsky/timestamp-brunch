@@ -23,3 +23,4 @@ to
 <script src="js/vendor-1450212245757.min.js"></script>
 <script src="js/app-1450212245757.min.js"></script>
 ```
+and the two new files will be created.
