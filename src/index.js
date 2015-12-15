@@ -6,19 +6,32 @@ var Promise = require('promise');
 
 function TimestampBrunch(brunchCfg){
 
-    var cfg = brunchCfg.plugins.timestampbrunch;
+    var cfgDefault = {
+        env : ['production']
+    };
+
+    var cfg =  brunchCfg.plugins.timestampbrunch;
+
+    console.log(cfg);
 
     var publicFolder = brunchCfg.paths.public;
 
     this.onCompile = function(generatedFiles){
+
+         //   console.log('PASS ', brunchCfg)
 
         if(brunchCfg.server.run){
             console.log('TimestampBrunch can\'t run with brunch watch');
             return;
         }
 
-        if(cfg.environments.indexOf(brunchCfg.env[0])!=-1){
+        if(brunchCfg.env.length==0){
+            console.log('Specify env')
+            return;
+        }
 
+        if(cfg.environments.indexOf(brunchCfg.env[0])!=-1){
+    
             this.cleanOld(publicFolder).then(function(){
 
                 this.renameFile(generatedFiles).then(function(files){
@@ -30,7 +43,7 @@ function TimestampBrunch(brunchCfg){
             }.bind(this));
 
         }else{
-            console.log('TimestampBrunch Error');
+            console.log('TimestampBrunch Env :: '+cfg.environments+' not found in' , brunchCfg.env);
         }
 
     };
