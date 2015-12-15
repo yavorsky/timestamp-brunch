@@ -7,8 +7,8 @@ This script tags will be compile
 ```json
 "plugins": {
 	"timestampbrunch" : {
-		"environments" : ['dev', 'production'],
-		"referenceFiles" : 'index.html',
+		"environments" : ["dev", "production"],
+		"referenceFiles" : "index.html",
 		"suffix" : "min"
 	}
 }
