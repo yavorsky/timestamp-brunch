@@ -15,6 +15,10 @@ Config :
 	}
 }
 ```
+Brunch build 
+```
+brunch build -e dev
+```
 This script tags will be compile
 ```html
 <script src="js/vendor.js"></script>
