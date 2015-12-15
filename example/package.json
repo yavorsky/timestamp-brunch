@@ -1,0 +1,19 @@
+{
+  "name": "brunch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "auto-reload-brunch": "^1.8.1",
+    "brunch": "^2.0.2",
+     "timestamp-brunch": "^0.1.1",
+    "javascript-brunch": "^1.8.0",
+    "livescript-brunch": "^1.8.0"
+  },
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
