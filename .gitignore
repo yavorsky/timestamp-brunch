@@ -1,2 +1,7 @@
 .idea/
 node_modules/
+example/node_modules
+example/bower_components
+example/app/dev
+example/app/public
+
