@@ -41,7 +41,6 @@ exports.config = {
 		"timestampbrunch" : {
 			"environments" : ['dev', 'production'],
 			"referenceFiles" : 'index.html'
-
 		}
 	}     
-}
+};

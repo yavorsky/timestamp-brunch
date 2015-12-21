@@ -1,11 +1,12 @@
+
 var path = require('path');
 var fs = require('fs');
 var recursive = require('recursive-readdir');
 var glob = require('glob');
 var Promise = require('promise');
+var debug = require('debug')('brunch:timestamp');
 
 function TimestampBrunch(brunchCfg){
-
 
     var cfg =  brunchCfg.plugins.timestampbrunch;
 
@@ -14,17 +15,17 @@ function TimestampBrunch(brunchCfg){
     this.onCompile = function(generatedFiles){
 
         if(brunchCfg.server.run){
-            console.log('TimestampBrunch can\'t run with brunch watch');
+            debug('Can\'t run with brunch watch');
             return;
         }
 
         if(brunchCfg.env.length==0){
-            console.log('Specify env')
+            debug('Specify env');
             return;
         }
 
         if(cfg.environments.indexOf(brunchCfg.env[0])!=-1){
-    
+
             this.cleanOld(publicFolder).then(function(){
 
                 this.renameFile(generatedFiles).then(function(files){
@@ -36,12 +37,14 @@ function TimestampBrunch(brunchCfg){
             }.bind(this));
 
         }else{
-            console.log('TimestampBrunch Env :: '+cfg.environments+' not found in' , brunchCfg.env);
+            debug('Env :: '+cfg.environments+' not found in' , brunchCfg.env);
         }
 
     };
 
     this.renameFile = function(generatedFiles){
+
+        var timestamp = new Date().getTime();
 
         function looping(filePath){
 
@@ -55,7 +58,7 @@ function TimestampBrunch(brunchCfg){
 
                 if(fs.existsSync(currentfile)){
 
-                    var newName = base+'-'+new Date().getTime()+(cfg.suffix ? '.'+cfg.suffix : '')+ext;
+                    var newName = base+'-'+timestamp+(cfg.suffix ? '.'+cfg.suffix : '')+ext;
 
                     fs.rename(currentfile, dir+'/'+newName, function(err){
 
@@ -70,7 +73,7 @@ function TimestampBrunch(brunchCfg){
 
                 }else{
                     if(err)   reject('File not found  ', currentfile);
-                    throw console.warn('File not found  ', currentfile);
+                    debug('File not found ' +files[file]);
                 }
 
 
@@ -93,6 +96,11 @@ function TimestampBrunch(brunchCfg){
         //parse ref files ex :index.html
         glob(publicFolder +'/' + cfg.referenceFiles, {}, function (er, files) {
 
+            if(er){
+                debug('Error with referenceFiles param ' +er);
+                return;
+            }
+
             for(var file in files){
 
                 if(fs.existsSync(files[file])){
@@ -103,7 +111,7 @@ function TimestampBrunch(brunchCfg){
                         var ext   = path.extname(filesInfos[fileInfo].oldName);
                         var base  = path.basename(filesInfos[fileInfo].oldName, ext);
 
-                        var content = fs.readFileSync(files[file], 'UTF-8')
+                        var content = fs.readFileSync(files[file], 'UTF-8');
 
                         var regExp = new RegExp(base+ext);
 
@@ -111,14 +119,18 @@ function TimestampBrunch(brunchCfg){
 
                             content = content.replace(regExp,filesInfos[fileInfo].newName);
 
+                            debug('Replace in ' + files[file] +' '+ filesInfos[fileInfo].oldName +' by '+ filesInfos[fileInfo].newName);
+
                             fs.writeFileSync(files[file], content);
                         }
 
                     }
+                }else{
+                    debug('File not found ' +files[file]);
                 }
             }
 
-        });
+        })
 
     };
 
