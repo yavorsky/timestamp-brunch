@@ -6,7 +6,7 @@
   "dependencies": {
     "auto-reload-brunch": "^1.8.1",
     "brunch": "^2.0.2",
-     "timestamp-brunch": "~0.1.1",
+    "timestamp-brunch": "*",
     "javascript-brunch": "^1.8.0",
     "livescript-brunch": "^1.8.0"
   },
