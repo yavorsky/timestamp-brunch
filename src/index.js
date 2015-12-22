@@ -12,6 +12,8 @@ function TimestampBrunch(brunchCfg){
 
     var publicFolder = brunchCfg.paths.public;
 
+    var timestamp = Math.floor(new Date().getTime()/1000 / 60);
+
     this.onCompile = function(generatedFiles){
 
         if(brunchCfg.server.run){
@@ -25,6 +27,8 @@ function TimestampBrunch(brunchCfg){
         }
 
         if(cfg.environments.indexOf(brunchCfg.env[0])!=-1){
+
+
 
             this.cleanOld(publicFolder).then(function(){
 
@@ -44,7 +48,7 @@ function TimestampBrunch(brunchCfg){
 
     this.renameFile = function(generatedFiles){
 
-        var timestamp = new Date().getTime();
+
 
         function looping(filePath){
 

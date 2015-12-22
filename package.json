@@ -1,6 +1,6 @@
 {
   "name": "timestamp-brunch",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Add timestamp to avoid the cache. JS/CSS",
   "repository": {
     "type": "git",
