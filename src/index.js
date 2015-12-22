@@ -128,7 +128,7 @@ function TimestampBrunch(brunchCfg){
 
                     }
 
-                    console.log(content)
+                    debug(content);
 
                     fs.writeFileSync(files[file], content);
 
