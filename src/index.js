@@ -105,13 +105,15 @@ function TimestampBrunch(brunchCfg){
 
                 if(fs.existsSync(files[file])){
 
+                    var content = fs.readFileSync(files[file], 'UTF-8');
+
                     //parse timestamped files
                     for(var fileInfo in filesInfos){
 
                         var ext   = path.extname(filesInfos[fileInfo].oldName);
                         var base  = path.basename(filesInfos[fileInfo].oldName, ext);
 
-                        var content = fs.readFileSync(files[file], 'UTF-8');
+
 
                         var regExp = new RegExp(base+ext);
 
@@ -121,10 +123,15 @@ function TimestampBrunch(brunchCfg){
 
                             debug('Replace in ' + files[file] +' '+ filesInfos[fileInfo].oldName +' by '+ filesInfos[fileInfo].newName);
 
-                            fs.writeFileSync(files[file], content);
+
                         }
 
                     }
+
+                    console.log(content)
+
+                    fs.writeFileSync(files[file], content);
+
                 }else{
                     debug('File not found ' +files[file]);
                 }
