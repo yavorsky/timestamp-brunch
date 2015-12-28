@@ -14,6 +14,8 @@ function TimestampBrunch(brunchCfg){
 
     var timestamp = Math.floor(new Date().getTime()/1000 / 60);
 
+    debug('timestamp start ', timestamp)
+
     this.onCompile = function(generatedFiles){
 
         if(brunchCfg.server.run){
