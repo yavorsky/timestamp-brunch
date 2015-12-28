@@ -14,8 +14,6 @@ function TimestampBrunch(brunchCfg){
 
     var timestamp = Math.floor(new Date().getTime()/1000 / 60);
 
-    debug('timestamp start ', timestamp)
-
     this.onCompile = function(generatedFiles){
 
         if(brunchCfg.server.run){
@@ -74,7 +72,12 @@ function TimestampBrunch(brunchCfg){
 
                     fs.rename(currentfile, dir+'/'+newName, function(err){
 
-                        if(err)  return reject(err);
+                        if(err) {
+                            throw new Error('rename error ', currentfile, err);
+                        }
+
+
+                        debug('File renamed  ' +currentfile, ' to ', newName);
 
                         return resolve({
                             "newName" : newName,
@@ -85,6 +88,7 @@ function TimestampBrunch(brunchCfg){
 
                 }else{
                     debug('File not found ' +files[file]);
+                    throw new Error('rename File not found ', currentfile);
                 }
 
 
@@ -137,8 +141,6 @@ function TimestampBrunch(brunchCfg){
                         }
 
                     }
-
-                    debug(content);
 
                     fs.writeFileSync(files[file], content);
 
