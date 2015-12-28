@@ -32,11 +32,17 @@ function TimestampBrunch(brunchCfg){
 
             this.cleanOld(publicFolder).then(function(){
 
-                this.renameFile(generatedFiles).then(function(files){
+                this.renameFile(generatedFiles).then(
+                    function(files){
 
-                    this.replaceContent(files);
+                        this.replaceContent(files);
 
-                }.bind(this));
+                    }.bind(this),
+
+                    function(err){
+                        throw new Error('Rename file error ', err);
+                    }
+                );
 
             }.bind(this));
 
@@ -76,7 +82,6 @@ function TimestampBrunch(brunchCfg){
                     }.bind(this));
 
                 }else{
-                    if(err)   reject('File not found  ', currentfile);
                     debug('File not found ' +files[file]);
                 }
 
@@ -101,7 +106,7 @@ function TimestampBrunch(brunchCfg){
         glob(publicFolder +'/' + cfg.referenceFiles, {}, function (er, files) {
 
             if(er){
-                debug('Error with referenceFiles param ' +er);
+                throw new Error('Error with referenceFiles param ', er);
                 return;
             }
 
@@ -127,7 +132,6 @@ function TimestampBrunch(brunchCfg){
 
                             debug('Replace in ' + files[file] +' '+ filesInfos[fileInfo].oldName +' by '+ filesInfos[fileInfo].newName);
 
-
                         }
 
                     }
@@ -137,7 +141,7 @@ function TimestampBrunch(brunchCfg){
                     fs.writeFileSync(files[file], content);
 
                 }else{
-                    debug('File not found ' +files[file]);
+                    throw new Error('File not found ', files[file]);
                 }
             }
 
