@@ -16,6 +16,8 @@ function TimestampBrunch(brunchCfg){
 
     this.onCompile = function(generatedFiles){
 
+
+
         if(brunchCfg.server.run){
             debug('Can\'t run with brunch watch');
             return;
@@ -28,9 +30,11 @@ function TimestampBrunch(brunchCfg){
 
         if(cfg.environments.indexOf(brunchCfg.env[0])!=-1){
 
+            debug('Start ');
 
+            this.cleanOld(publicFolder).then(function(f){
 
-            this.cleanOld(publicFolder).then(function(){
+                debug('Deleted files :: ', f);
 
                 this.renameFile(generatedFiles).then(
                     function(files){
@@ -128,8 +132,6 @@ function TimestampBrunch(brunchCfg){
                         var ext   = path.extname(filesInfos[fileInfo].oldName);
                         var base  = path.basename(filesInfos[fileInfo].oldName, ext);
 
-
-
                         var regExp = new RegExp(base+ext);
 
                         if(regExp.test(content)){
@@ -155,24 +157,48 @@ function TimestampBrunch(brunchCfg){
 
     this.cleanOld = function(base, ext){
 
-        return new Promise(function(resolve, reject){
+        var p = new Promise(function(resolve, reject){
 
-            recursive(publicFolder, function (err, files) {
+            return recursive(publicFolder, function (err, files) {
 
-                for(var file in files){
+                return resolve(files);
 
-                    if(/-\d+(\.[^\d]+)?\.[^\d]+$/.test(files[file])){
+            })
+        });
 
-                        fs.unlink(files[file]);
+        return p.then(function(files){
 
-                    }
+
+            function unlinkFiles(f){
+
+                return new Promise(function(resolve, reject){
+
+                    return fs.unlink(f, function(err){
+
+                        if(err) return reject(err);
+
+                        else return resolve(f);
+
+                    });
+
+                })
+            }
+
+            var promises = [];
+
+            for(var file in files){
+
+                if(/-\d+(\.[^\d]+)?\.[^\d]+$/.test(files[file])) {
+
+                    promises.push(unlinkFiles(files[file]));
+
                 }
 
-                return resolve(true);
+            }
 
-            });
+            return Promise.all(promises);
 
-        });
+        })
 
     };
 }
