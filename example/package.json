@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "auto-reload-brunch": "^1.8.1",
-    "brunch": "^2.0.2",
+    "brunch": "^2.1.3",
     "timestamp-brunch": "*",
     "javascript-brunch": "^1.8.0",
     "livescript-brunch": "^1.8.0"
