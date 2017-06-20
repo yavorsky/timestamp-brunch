@@ -6,10 +6,11 @@ const recursive = require('recursive-readdir');
 const glob = require('glob');
 const debug = require('debug')('brunch:timestamp');
 
+const scriptTarg = /<script>window\.appVersion = .+<\/script>/;
+
 const TimestampBrunch = class TimestampBrunch {
 
     constructor(brunchCfg) {
-
         this.brunchCfg = brunchCfg;
 
         this.cfg = brunchCfg.plugins.timestampbrunch;
@@ -17,10 +18,26 @@ const TimestampBrunch = class TimestampBrunch {
         this.publicFolder = brunchCfg.paths.public;
 
         this.timestamp = Math.floor(new Date().getTime() / 1000 / 60);
+        this.separator = '-';
     }
 
     onCompile(generatedFiles) {
+        if (this.brunchCfg.persistent) {
+          this.timestamp = '';
+          this.separator = '';
+          this.renameFilePromised(generatedFiles).then(
+            function (files) {
 
+              this.replaceContent(files);
+
+            }.bind(this),
+
+            function (err) {
+              throw new Error('Rename file error ', err);
+            }
+          );
+          return;
+        }
         if (this.brunchCfg.server.run) {
             debug('Can\'t run with brunch watch');
             return;
@@ -164,7 +181,7 @@ const TimestampBrunch = class TimestampBrunch {
 
             if (fs.existsSync(currentfile)) {
 
-                let newName = base + '-' + newNameFile + ext;
+                let newName = base + this.separator + newNameFile + ext;
 
                 fs.rename(currentfile, dir + '/' + newName, function (err) {
 
@@ -197,6 +214,7 @@ const TimestampBrunch = class TimestampBrunch {
     replaceContent(filesInfos) {
 
         //parse ref files ex :index.html
+        const { timestamp } = this;
         glob(this.publicFolder + '/' + this.cfg.referenceFiles, {}, function (er, files) {
 
             if (er) {
@@ -216,11 +234,14 @@ const TimestampBrunch = class TimestampBrunch {
                         let ext = path.extname(filesInfos[fileInfo].oldName);
                         let base = path.basename(filesInfos[fileInfo].oldName, ext);
 
-                        let regExp = new RegExp(base + ext);
+                        let regExp = new RegExp(base + '.*' + ext);
 
                         if (regExp.test(content)) {
+                            const scriptString = `<script>window.appVersion = "${timestamp}";</script>`;
 
-                            content = content.replace(regExp, filesInfos[fileInfo].newName);
+                            content = content
+                                .replace(regExp, filesInfos[fileInfo].newName)
+                                .replace(scriptTarg, scriptString);
 
                             debug('Replace in ' + files[file] + ' ' + filesInfos[fileInfo].oldName + ' by ' + filesInfos[fileInfo].newName);
 
