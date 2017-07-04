@@ -48,7 +48,7 @@ const TimestampBrunch = class TimestampBrunch {
             return;
         }
 
-        if (this.cfg.environments.indexOf(this.brunchCfg.env[0]) != -1) {
+        if (this.cfg.environments === '*' || this.cfg.environments.indexOf(this.brunchCfg.env[0]) != -1) {
 
             debug('Start ');
 
