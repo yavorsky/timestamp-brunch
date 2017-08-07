@@ -233,7 +233,7 @@ const TimestampBrunch = class TimestampBrunch {
 
                         let ext = path.extname(filesInfos[fileInfo].oldName);
                         let base = path.basename(filesInfos[fileInfo].oldName, ext);
-                        let regExp = new RegExp(`(${base}(\\-\\d+)?(\\.min)?${ext})`);
+                        let regExp = new RegExp(`${base}(\\-\\d+)?(\\.min)?${ext}`);
 
                         // let regExp = new RegExp(base + '.*' + ext);
 
