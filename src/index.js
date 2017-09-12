@@ -13,7 +13,7 @@ const TimestampBrunch = class TimestampBrunch {
     constructor(brunchCfg) {
         this.brunchCfg = brunchCfg;
 
-        this.cfg = brunchCfg.plugins.timestampbrunch;
+        this.cfg = brunchCfg.plugins.timestamp || brunchCfg.plugins.timestampbrunch;
 
         this.publicFolder = brunchCfg.paths.public;
 
